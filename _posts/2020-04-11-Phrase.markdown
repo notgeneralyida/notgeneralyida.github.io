@@ -1,0 +1,30 @@
+---
+layout:     post
+title:      "Phrases"
+date:       2020-04-11 12:00:00
+author:     "Yida"
+header-img: "img/post-bg-2015.jpg"
+catalog: true
+tags:
+    - English
+    - Phrases
+    - Animal Crossing
+---
+
+## 正文
+
+|Phrase| Meaning|
+|------|-----|
+|Trading craft materials around |在周围交易工艺材料|
+|be kind of how we do things out here in the country |我们在这个国家做事情的方式|
+|move around|搬来白去|
+|What drew you to this area| 什么吸引你来到这个地区
+|The natural beauty| 自然美景
+|The peace and quite| 宁静祥和
+|It's all about the fruit|
+|I can't get enough of it| 我怎么也吃不够
+|[track sth/sb down](https://dictionary.cambridge.org/us/dictionary/english-chinese-simplified/track-sth-sb-down?q=track+down)| 追踪到
+|I could make it worth your while| 我会让你觉得值得
+|see if anything strikes your fancy| 看看有没有你喜欢的
+|calculate the result to two decimal places (= give two numbers after the decimal point)| 计算出小数点后两位
+

@@ -14,64 +14,462 @@ tags:
 > “Yeah It's on. ”
 
 
-Hux 的 Blog 就这么开通了。
 
-[跳过废话，直接看技术实现 ](#build) 
+## Introduction
+### OOD and System Design 
+* System Design 和 OOD 都是设计系统的类型题。
+* OOD 注重设计系统的可行性（viability）， System Design (scalability) 注重系统的可拓展性
 
-2015 年，Hux 总算有个地方可以好好写点东西了。
+### 面试经验
+* 把面试官当成甲方，和其共同讨论获得有效的信息。 
+* 询问清楚题目的具体要求。
+* 检查你的设计，看是否能够支持所有的功能。
+
+### S.O.L.I.D 原则
+#### S - Single responsibility principle 单一责任原则。
+一个类应该有且仅有一项工作。（修改类的目的只能有一个。）
+
+下面的代码，将Print的工作混淆到AreaCalculator之中。
+```java
+public class AreaCalculator 
+{
+    private float result;
+    public float calculateArea(Shape s)
+    { 
+        // calculates the area for a given shape, store in result
+    }
+    public String printAreaAccurateToOneDecimaPlace()
+    {
+        // prints result accurate to one decimal place
+    }
+}
+
+```
+下面的代码将其拆分，AreaCalculate只完成计算面积这个任务，不需要完成Print的工作。
+
+```java
+public class AreaCalculate
+{
+    private float results;
+    public float getResult()
+    {
+        return this.result;
+    }
+    public float calculateArea(Shape s)
+    {
+        // calculates the area for a given shape
+    }
+}
+
+public class Printer
+{
+    public String print(AreaCalculator ac)
+    {
+        System.out.print(ac.getResult());
+    }
+}
+```
+#### Open Close principle 开放封闭原则
+对象或者实体应该对**扩展**开放， 对**修改**封闭.
+
+下面的代码，很不好，没有一种新的情况来到，我们就需要修改代码
+```java
+public class AreaCalculator
+{
+    public float calculateArea(Triangle t)
+    {
+        //calculates the area for triangle 
+    }
+
+    public float calculateArea(Rectangle r)
+    {
+        //calculates the area for rectangle
+     }
+}
+
+```
+下面的代码就是面向扩展的，传进的来的是一个基类， 新来一个东西后，则需要对这个基类进行扩展，从而达到不需要修改本身代码的目的.
+```java
+public class AreaCalculator
+{
+    public float calculateArea(Shape s)
+    {
+        return S.results // ...
+    }
+}
+
+```
+
+#### Liskov substitution principle 里氏替换原则
+
+任何一个子类或者派生类都应该可以替换他们的基类或父类。
+
+```java
+public class Shape
+{
+    abstract public float calculateVolumn();
+    abstract public float calculateArea();
+}
+
+public class Rectangle extends Shape 
+{
+    //...
+}
+
+public class Cube extends Shape
+{
+    //...
+}
+```
+
+#### Interface segregation principle 接口分离原则
+不应该强迫一个类实现它用不上的接口
+
+下面的代码中，Rectangle不应该有体积的计算接口。
+```java
+public interface Shape
+{
+    public float calculateVolumn();
+    public folat calculateArea();
+}
+
+public class Rectangle implements Shape
+{
+    //
+}
+
+public class Cube implements Shpae
+{
+    //
+}
+```
+
+#### Dependency inversion principle 依赖翻转原则
+
+抽象不应该依赖于具体实现，具体实现应该依赖于抽象。
+
+抽象类不应该有具体的实现，应该是完全的抽象。 下面的代码，试图在抽象的类中具体的实现，以后每来一个图像，都要进行修改不好。
+
+```java 
+public class AreaCalculator
+{
+    private float result;
+    public float getResult()
+    {
+        return this.result;
+    }
+    public float calculateArea(Shape s)
+    {
+        if (s == Triangle)
+        {
+             this.result = b * h / 2;
+        }
+        else if (s == Rectangle)
+        {
+            this.result = l * w;
+        }
+    }
+
+}
+```
+
+下面的代码则是具体的实现依赖于抽象，通过实现接口来提供具体的实现。 
+
+```java 
+public interface Shpae
+{
+    public float getArea();
+}
+
+public class Trianlge implements Shape
+{
+    public float getArea()
+    {
+        return b * h / 2;
+    }
+
+}
+
+public class AreaCalculator
+{
+    private float result;
+    public float getResult()
+    {
+        return this.result
+     }
+
+    public float calculateArea(Shape s)
+    {
+        this.result = s.getArea()
+    }
+
+}
+```
+
+## Example - Elevator 
+
+### 5C 解题法
+* Clarify
+
+    通过和面试官的交流，去除题目中的歧义， 确定答题范围。
+* Core objects
+ 
+    确定题目所涉及的类，以及类之间的映射关系
+* Cases
+ 
+    确定题目中所需要实现的场景和功能
+* Classes
+ 
+    通过类图的方式，具体填充题目中涉及的类
+* Correctness
+ 
+    检查自己的设计，是否满足关键点
+    
+#### Clarify
+
+* What
+    
+    针对题目中的关键词来提问，帮助自己更好的确定答题范围。
+    * 大多数的关键词为名词，通过名词的属性来考虑。
+    * Elevator
+        * 可能考虑获取每辆电梯的目前重量
+        * 是否需要设计两种类， 如果需要他们之间是什么关系？客梯和货梯有什么区别？
+        
+    * 针对本题：
+        * 所有电梯厢均为相同规格，不需要区分客梯和货梯。
+        
+    * Building 
+        * 楼有多大、楼有多高、楼内能容纳多少人？
+            * 通用属性， 对于题目帮助不大
+            
+        * 是否有多处能搭乘电梯口？ 当收到一个搭乘电梯的请求时，有多少个电梯能够响应。
+    * 针对本题：
+        * 每层仅一处能搭乘，所有电梯均可响应。
+        
+* How
+    
+    针对问题主题的规则来提问，帮助自己明确解题方向。
+    
+    此类问题没有标准答案， 你可以提出一些解决方案， 通过面试官的反应， 选择出一个你比较有信心的（简单）的方案。
+    
+    * 当按下按钮时，哪一台电梯会响应？
+        * 同方向 >  静止 >  反向。
+        * 一半负责奇数楼层， 一半负责偶数楼层。
+    * 当电梯在运行时， 那些按键可以响应？
+        * 能否按下反向的楼层。
+        
+    * 针对本题
+        * 同向 >  静止 > 反向， 当运行时不能按下反向的楼层。
+        * 信息:  电梯至少需要三种状态， 并且要知道当前在那一层。
+        
+   
+* Who
+    
+    设计由人主导 vs 设计由系统主导？
+    * 电梯系统如何获取每位乘客的重量？
+        * Passenger class 包含重量。
+        * 电梯能够自动感应当前重量。
+    * 针对本题
+        * 电梯能够获得当前重量。
+
+#### Core Object
+
+* 为什么要定义Core Object?
+    * 这是和面试官初步的纸面contract
+    * 承上启下， 来自于Clarify的结构， 成为Use case的依据
+    * 为画类图打下基础
+* 如何定义Core Object？
+    * 以一个Object作为基础，线性思考。
+    * 确定Objects之间的映射关系。
+    
+![Core Objects](/img/in-post/post-ood-l1/core1.png)
+
+* 需要Request类来代表请求
+* 需要Elevator System来处理外部请求，并安排电梯
+* 需要电梯来完成功能，并接收Elevator Button的请求。
+
+#### Cases
+* 如何写Use cases？ 
+    * 利用定义的Core Object, 列举出每个Object对应产生的use case.
+    * 每一个use case 只需要先用一句话简单的话来描述即可。
+    
+* Elevator System 
+    * Handle request 
+* Elevator
+    * Take external request
+    * Take internal request
+    * Open gate
+    * Close gate
+    * Check weight 
+* ElevatorButton
+    * Press button 
+    
+#### Class
+* 什么是类图？
+    * Class Name
+    * Attributes
+    * Functions 
+* 为什么要画类图？
+    * 可交付， Minimal Viable Product
+    * 节省时间，不容易在Coding上挣扎
+    * 建立在Use case 上， 和之前的步骤层层递进， 条理清晰， 便于交流和修改
+    * 如果时间允许、面试官要求，便于转化成code
+* 怎么画类图
+    * 遍历你所列出的use cases
+    * 对于每一个use case, 更加详细的描述这个use case 在做什么事情，例如 take external request -> Elevator System takes an external
+      request, and decide to push this request to an appropriate elevator.
+    * 对于这个描述， 在已有的 core objects 里填充进所需要的信息。
+    
+**User case 1: Handle request**
+ 
+ Elevator System takes an external request, and decide to push this request to an appropriate elevator.
+ 
+**User case 2: Take external request**
+ 
+ An elevator takes an external request, inserts in its stop list.
+ 
+* Challenge 1
+    * 如果电梯目前在1L， 有人按下了5L向上， 之后又有人按下了3L向上， 电梯会怎么行动？
+        * stops will be {5, 3}
+        * expected is {3, 5}
+    * Solution 1: sort stops every time we add to it
+    * Solution 2: use priority queue instead of list
+
+* Challenge 2
+    * 如果电梯目前在1L， 有人按下了5L向上， 之后又有人按下了3L向上，紧着着这台电梯又被分配了一个2L向下的request。 这台电梯会如何行动
+        * stops will be {2, 3, 5}
+        * Expected is {3, 5, 2} 
+    * Solution: keep 2 lists for different direction
+    
+**User case 3: Take internal request**
+
+An elevator takes an internal request, determine if it's valid, inserts in its stop list.
+
+* Challenge
+    * 如何判断一个internal request是否为Valid
+    * Solution  
+        * if elevator going up: requested level lower than current level invalid. 
+        * if elevator going down: requested level higher than current level invalid.
+
+**User case 4: Close gate**
+* An elevator checks if overweight; 
+* close the door;
+* then check stops corresponds to current status;
+* if no stops left, check the reverse direction stops;
+* change status to reverse direction or idle;
+
+**Use case 5: check weight**
+
+An elevator checks its current weight and compare with limit to see if overweight.
+
+**Use case 6 press button**
+
+A button inside elevator is pressed, will generate an internal request and send to the elevator.
+
+#### Correctness
+从以下几个方面检查：
+* Validate use cases (检查是否支持所有的use case)
+* Follow good practice (面试当中的加分项，展现一个程序员的经验)
+* S.O.L.I.D.
+* Design Pattern 
+   
+    
+
+## Good Practice
+### Access Modifier 
+* package
+
+    如果什么都不声明， 变量和函数都是package level visible 的，在同一个package内的其他类都可以访问。
+```java 
+String input = "test";
+void printInput()
+{
+    System.out.println(input);
+}
+```
+    一般用不到，（在写Test的时候有可能用到package level的变量）。在类图内，避免使用default的package level access.
+* public
+
+    最Open的一类，声明为public，变量和函数都是public level visible的， 任何其他的类都可以访问
+```java 
+public static void main(String[] arguments)
+{
+    ..
+}
+```
+
+    在类图中，用'+' 表示一个变量或者函数为public
+* protected
+
+    如果声明为protected, 变量和函数在能被定义他们的类访问的基础上， 还能够被该类的子类所访问。 
+    protected 也是OOD当中实现继承的重要手段。
+```java
+class AudoPlayer
+{
+    protected Speaker speaker;
+}
+class StreamingAudioPlayer extends AudioPlayer
+{
+    public void openSpeaker()
+    {
+        speaker.open();
+    }
+}
+```   
+    
+    在类图之中，用'#'表示一个变量或者函数为protected。
 
 
-作为一个程序员， Blog 这种轮子要是挂在大众博客程序上就太没意思了。一是觉得大部分 Blog 服务都太丑，二是觉得不能随便定制不好玩。之前因为太懒没有折腾，结果就一直连个写 Blog 的地儿都没有。
+* private 
 
-在玩了一段时间知乎之后，答题的快感又激起了我开博客的冲动。之前的[个人网站](http://huangxuan.me/portfolio)是作品集形式的（现在集成进来了），并不适合用来写博文，一不做二不休，花一天搞一个吧！
+    最保守的形式
 
+    如果声明为private，变量和函数都是class level variable的， 这是所有access modifier中限制最多的一个， 仅有定义这些变量和函数的类自己可以访问。 
 
-<p id = "build"></p>
+    private 也是OOD当中实现封装的重要手段。
+```java
+public class AreaCalculator()
+{
+    private Logger log;
+}
+```
+    我们不希望外部类修改我们的log
 
-## 正文
+    在类图中，用'-'表示一个变量或者函数为private
 
-接下来说说搭建这个博客的技术细节。  
+### 如何知道一个函数，是否成功完成任务?
 
-正好之前就有关注过 [GitHub Pages](https://pages.github.com/) + [Jekyll](http://jekyllrb.com/) 快速 Building Blog 的技术方案，非常轻松时尚。
+#### 方法1 Use boolean instead of void
+* 成功的话返回TRUE， 否则返回False
+* 如何知道是什么地方出错？
 
-其优点非常明显：
+#### 方法2 Use  exceptions
 
-* **Markdown** 带来的优雅写作体验
-* 非常熟悉的 Git workflow ，**Git Commit 即 Blog Post**
-* 利用 GitHub Pages 的域名和免费无限空间，不用自己折腾主机
-	* 如果需要自定义域名，也只需要简单改改 DNS 加个 CNAME 就好了 
-* Jekyll 的自定制非常容易，基本就是个模版引擎
+### 继承
+检查你的设计中， 是否有重复的类， 可以采用继承的方法来表现。
 
+## Challengle
 
-本来觉得最大的缺点可能是 GitHub 在国内访问起来太慢，所以第二天一起床就到 GitCafe(Chinese GitHub Copy，现在被 Coding 收购了) 迁移了一个[镜像](http://huxpro.coding.me)出来，结果还是巨慢。
+What if I want to apply different ways to handle external requests during different time of a day?
 
-哥哥可是个前端好嘛！ 果断开 Chrome DevTool 查了下网络请求，原来是 **pending 在了 Google Fonts** 上，页面渲染一直被阻塞到请求超时为止，难怪这么慢。  
-忍痛割爱，只好把 Web Fonts 去了（反正超时看到的也只能是 fallback ），果然一下就正常了，而且 GitHub 和 GitCafe 对比并没有感受到明显的速度差异，虽然 github 的 ping 值明显要高一些，达到了 300ms，于是用 DNSPOD 优化了一下速度。
+* Solution 1 if-else
 
+```java 
+public void handleRequest(ExternalRequest r)
+{
+    if (time == TIME.PEAK)
+    {
+        // use peak hour handler
+    }
+    else if (time == TIME.NORMAL)
+    {
+        // use normal hour handler 
+    }
+} 
+```
 
----
+* Solution 2: Strategy design pattern 
 
-配置的过程中也没遇到什么坑，基本就是 Git 的流程，相当顺手
+## Final View
 
-大的 Jekyll 主题上直接 fork 了 Clean Blog（这个主题也相当有名，就不多赘述了。唯一的缺点大概就是没有标签支持，于是我给它补上了。）
-
-本地调试环境需要 `gem install jekyll`，结果 rubygem 的源居然被墙了……后来手动改成了我大淘宝的镜像源才成功
-
-Theme 的 CSS 是基于 Bootstrap 定制的，看得不爽的地方直接在 Less 里改就好了（平时更习惯 SCSS 些），**不过其实我一直觉得 Bootstrap 在移动端的体验做得相当一般，比我在淘宝参与的团队 CSS 框架差多了……**所以为了体验，也补了不少 CSS 进去
-
-最后就进入了耗时反而最长的**做图、写字**阶段，也算是进入了**写博客**的正轨，因为是类似 Hack Day 的方式去搭这个站的，所以折腾折腾着大半夜就过去了。
-
-第二天考虑中文字体的渲染，fork 了 [Type is Beautiful](http://www.typeisbeautiful.com/) 的 `font` CSS，调整了字号，适配了 Win 的渣渲染，中英文混排效果好多了。
-
-
-## 后记
-
-回顾这个博客的诞生，纯粹是出于个人兴趣。在知乎相关问题上回答并获得一定的 star 后，我决定把这个博客主题当作一个小小的开源项目来维护。
-
-在经历 v1.0 - v1.5 的蜕变后，这个博客主题愈发完整，不但增加了诸多 UI 层的优化（opinionated）；在代码层面，更加丰富的配置项也使得这个主题拥有了更好的灵活性与可拓展性。而作为一个开源项目，我也积极的为其完善文档与解决 issue。
-
-如果你恰好逛到了这里，希望你也能喜欢这个博客主题。
-
-—— Hux 后记于 2015.10
-
-
+![final view](/img/in-post/post-ood-l1/final_view.png)

@@ -1,0 +1,32 @@
+---
+layout:     post
+title:      "Word Lists"
+date:       2020-04-11 12:00:00
+author:     "Yida"
+header-img: "img/post-bg-2015.jpg"
+catalog: true
+tags:
+    - English
+    - Word list
+    - Animal Crossing 
+---
+
+## 正文
+
+|Word| Meaning|POS|Etymology|
+|----|----|----|-----|
+|[teensy](https://dictionary.cambridge.org/us/dictionary/english/teensy)|very small|
+|[campsite](https://dictionary.cambridge.org/us/dictionary/english-chinese-simplified/campsite)|营地|
+|[craft](https://dictionary.cambridge.org/us/dictionary/english-chinese-simplified/craft)|工艺，手艺|
+|[camper](https://dictionary.cambridge.org/us/dictionary/english-chinese-simplified/camper)|露营者，露营车|
+|[breezy](https://dictionary.cambridge.org/us/dictionary/english-chinese-simplified/breezy)|凉风习习|adjective| breez + y|
+|[hollow](https://dictionary.cambridge.org/us/dictionary/english-chinese-simplified/hollow)|山谷| noun| hole + low |
+|[rustle](https://dictionary.cambridge.org/us/dictionary/english-chinese-simplified/rustle)|发出沙沙声| verb| 
+|[ripen](https://dictionary.cambridge.org/us/dictionary/english-chinese-simplified/ripen)|使成熟| verb| ripe 成熟的 en 使|
+[bell](https://dictionary.cambridge.org/us/dictionary/english-chinese-simplified/bell?q=bells)|铃铛|noun
+[crisp](https://dictionary.cambridge.org/us/dictionary/english-chinese-simplified/crisp)|脆的|adjective|
+|[scrumptious](https://dictionary.cambridge.org/us/dictionary/english-chinese-simplified/scrumptious)|美味的|adjective|
+|[antsy](https://dictionary.cambridge.org/us/dictionary/english-chinese-simplified/antsy)|坐立不安的|adjective| ant的复数
+|[decimal](https://dictionary.cambridge.org/us/dictionary/english-chinese-simplified/decimal)|小数的|adjective| deci + mal
+
+
