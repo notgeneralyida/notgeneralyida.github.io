@@ -1,0 +1,33 @@
+---
+layout:     post
+title:      "PIL"
+subtitle:   " 第一课 "
+date:       2020-04-13 13:07:00
+author:     "Yida"
+header-img: "img/post-bg-2015.jpg"
+catalog: true
+tags:
+    - Python
+    - PIL
+---
+
+> “Yeah It's on. ”
+
+
+
+## Introduction
+
+### Colorize
+定义 ImageOps.colorize(image, black, white) => image
+
+含义：使得灰色图变成彩色图像。 变量black 和 white 对应RGB元组或者颜色名称。 这个函数会计算出一个颜色值，使得原图像
+中的所有黑色变成第一种颜色，所有白色变成对应第二种颜色。 变量image的模式必须为'L'。
+
+```python
+from PIL import Image, ImageOps
+path = ''
+im02 = Image.open(path)
+r,g,b = im02.split()
+print(r.mode)
+im_b = ImageOps.colorize(b, (255, 0, 0), (0, 255, 0))
+```

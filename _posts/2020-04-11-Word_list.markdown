@@ -28,5 +28,9 @@ tags:
 |[scrumptious](https://dictionary.cambridge.org/us/dictionary/english-chinese-simplified/scrumptious)|美味的|adjective|
 |[antsy](https://dictionary.cambridge.org/us/dictionary/english-chinese-simplified/antsy)|坐立不安的|adjective| ant的复数
 |[decimal](https://dictionary.cambridge.org/us/dictionary/english-chinese-simplified/decimal)|小数的|adjective| deci + mal
+|[permutation](https://dictionary.cambridge.org/us/dictionary/english-chinese-simplified/permutation)|排列| noun|per + mut + ation 
+|[combination](https://dictionary.cambridge.org/us/dictionary/english-chinese-simplified/combination?q=+combination)| 组合| noun 
+
+
 
 
